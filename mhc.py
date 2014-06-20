@@ -51,7 +51,8 @@ class MyHandler(BaseHTTPServer.BaseHTTPRequestHandler):
         cursor.close()
         conn.close()
 
-        if loadavg_onemin > FAIL_LOADAVG and mysql_threads_connected > FAIL_MYSQL_CONNS and FAIL_SLAVE_SQL !="Yes" and FAIL_SLAVE_IO != "Yes":
+        if loadavg_onemin > FAIL_LOADAVG and mysql_threads_connected > FAIL_MYSQL_CONNS and FAIL_SLAVE_SQL !="Yes" and\
+        FAIL_SLAVE_IO != "Yes" and FAIL_Seconds_Behind_Master > 900:
                                   CHECK_RESULT='fail'
         else:
                                   CHECK_RESULT='pass'
