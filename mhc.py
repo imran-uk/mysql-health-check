@@ -9,8 +9,12 @@ HOST_NAME = '192.168.200.165'
 PORT_NUMBER = 8000
 
 # pass/fail params
-FAIL_LOADAVG=0.2
+FAIL_LOADAVG=4
 FAIL_MYSQL_CONNS=200
+FAIL_SLAVE_SQL="No"
+FAIL_SLAVE_IO = "No"
+FAIL_Seconds_Behind_Master = 900
+
 
 class MyHandler(BaseHTTPServer.BaseHTTPRequestHandler):
     def do_HEAD(s):
@@ -47,7 +51,7 @@ class MyHandler(BaseHTTPServer.BaseHTTPRequestHandler):
         cursor.close()
         conn.close()
 
-        if loadavg_onemin > FAIL_LOADAVG and mysql_threads_connected > FAIL_MYSQL_CONNS:
+        if loadavg_onemin > FAIL_LOADAVG and mysql_threads_connected > FAIL_MYSQL_CONNS and FAIL_SLAVE_SQL !="Yes" and FAIL_SLAVE_IO != "Yes":
                                   CHECK_RESULT='fail'
         else:
                                   CHECK_RESULT='pass'
@@ -58,7 +62,7 @@ class MyHandler(BaseHTTPServer.BaseHTTPRequestHandler):
         s.wfile.write("<p>mysql threads connected: " + mysql_threads_connected + "</p>")
         s.wfile.write("<p>mysql seconds_behind_master: " + mysql_behind_master + "</p>")
         s.wfile.write("<p>Slave SQL Running?: " + Slave_SQL_Running + "</p>")
-        s.wfile.write("<p>Slave SQL Running?: " + Slave_IO_Running + "</p>")
+        s.wfile.write("<p>Slave IO Running?: " + Slave_IO_Running + "</p>")
         s.wfile.write("</body></html>")
 
 if __name__ == '__main__':
