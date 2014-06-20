@@ -5,6 +5,9 @@ import time
 import MySQLdb
 import BaseHTTPServer
 
+"""Host and Port for python web server, HOST_NAME can be represented by
+either the FQDN or plain old IP address.
+"""
 HOST_NAME = '192.168.200.165'
 PORT_NUMBER = 8000
 
@@ -28,10 +31,11 @@ class MyHandler(BaseHTTPServer.BaseHTTPRequestHandler):
         s.end_headers()
 
         loadavg_onemin=os.getloadavg()[0]
-
+# mysql login credentials
         conn = MySQLdb.connect(host='localhost', user='root', passwd='')
         cursor = conn.cursor()
 
+# execute mysql queries to database, reqires the MySQL-python package from repo.
         cursor.execute("show slave status")
         row = cursor.fetchone()
         mysql_behind_master = str(row[32])
@@ -49,8 +53,10 @@ class MyHandler(BaseHTTPServer.BaseHTTPRequestHandler):
         mysql_threads_connected = row[1]
 
         cursor.close()
+        #close connection to DB
         conn.close()
-
+        
+#this is the logic behind the pass/fail, modifications still need to be done to my liking.
         if loadavg_onemin > FAIL_LOADAVG and mysql_threads_connected > FAIL_MYSQL_CONNS and FAIL_SLAVE_SQL !="Yes" and\
         FAIL_SLAVE_IO != "Yes" and int(mysql_behind_master) < FAIL_Seconds_Behind_Master:
                                   CHECK_RESULT='fail'
