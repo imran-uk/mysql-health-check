@@ -6,12 +6,14 @@ import MySQLdb
 import BaseHTTPServer
 import socket
 bhost = socket.gethostname()
+ip = ip = ([(s.connect(('8.8.8.8', 80)), s.getsockname()[0], s.close()) for s in [socket.socket(socket.AF_INET, socket.SOCK_DGRAM)]][0][1])
+
 
 
 """Host and Port for python web server, HOST_NAME can be represented by
 either the FQDN or plain old IP address.
 """
-HOST_NAME = '192.168.200.165'
+HOST_NAME = str(ip)
 PORT_NUMBER = 8000
 
 # pass/fail params
