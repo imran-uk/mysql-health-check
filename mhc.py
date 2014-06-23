@@ -4,6 +4,9 @@ import os
 import time
 import MySQLdb
 import BaseHTTPServer
+import socket
+bhost = socket.gethostname()
+
 
 """Host and Port for python web server, HOST_NAME can be represented by
 either the FQDN or plain old IP address.
@@ -55,6 +58,7 @@ class MyHandler(BaseHTTPServer.BaseHTTPRequestHandler):
         cursor.close()
         #close connection to DB
         conn.close()
+        print bhost
         
 #this is the logic behind the pass/fail, modifications still need to be done to my liking.
         if loadavg_onemin > FAIL_LOADAVG and mysql_threads_connected > FAIL_MYSQL_CONNS and FAIL_SLAVE_SQL !="Yes" and\
